@@ -5,7 +5,8 @@ ui <- fluidPage(
     
     sidebarLayout(
         sidebarPanel(
-            numericInput("x", "Enter value of x: ", value = 10, min = 10, max = 100)
+            numericInput("x", "Enter value of x: ", value = 10, min = 10, max = 100),
+            actionButton("go", "Update")
         ),
         mainPanel(
             plotOutput("hist"),
@@ -15,7 +16,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-    data <- reactive({
+    data <- eventReactive(input$go, {
         rnorm(input$x)
     })
     output$hist <- renderPlot({
