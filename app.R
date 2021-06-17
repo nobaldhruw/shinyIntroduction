@@ -5,8 +5,8 @@ ui <- fluidPage(
     
     sidebarLayout(
         sidebarPanel(
-            numericInput("x", "Enter value of x: ", value = 10, min = 10, max = 100),
-            actionButton("go", "Update")
+            actionButton("norm", "norm"),
+            actionButton("unif", "unif")
         ),
         mainPanel(
             plotOutput("hist"),
@@ -16,17 +16,24 @@ ui <- fluidPage(
 )
 
 server <- function(input, output) {
-    data <- eventReactive(input$go, {
-        rnorm(input$x)
+    rv <- reactiveValues(data = rnorm(100), updateCount = 0)
+    
+    observeEvent(input$norm, { 
+        rv$data <- rnorm(100) 
+        rv$updateCount <- rv$updateCount + 1
     })
-    observeEvent(input$go, {
-        write.csv(data(), 'data.csv')
+    observeEvent(input$unif, { 
+        rv$data <- runif(100) 
+        rv$updateCount <- rv$updateCount + 1
+    })
+    observeEvent(rv$updateCount, {
+        print(rv$updateCount)
     })
     output$hist <- renderPlot({
-        hist(data())
+        hist(rv$data)
     })
     output$summary <- renderPrint({
-        summary(data())
+        summary(rv$data)
     })
 }
 
