@@ -19,6 +19,9 @@ server <- function(input, output) {
     data <- eventReactive(input$go, {
         rnorm(input$x)
     })
+    observeEvent(input$go, {
+        write.csv(data(), 'data.csv')
+    })
     output$hist <- renderPlot({
         hist(data())
     })
