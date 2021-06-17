@@ -5,18 +5,24 @@ ui <- fluidPage(
     
     sidebarLayout(
         sidebarPanel(
-            numericInput("x", "Enter value of x: ", value = 1),
-            numericInput("y", "Enter value of y: ", value = 2)
+            numericInput("x", "Enter value of x: ", value = 10, min = 10, max = 100)
         ),
         mainPanel(
-            textOutput("sum")
+            plotOutput("hist"),
+            verbatimTextOutput("summary")
         )
     )
 )
 
 server <- function(input, output) {
-    output$sum <- renderText({
-        input$x + input$y
+    data <- reactive({
+        rnorm(input$x)
+    })
+    output$hist <- renderPlot({
+        hist(data())
+    })
+    output$summary <- renderPrint({
+        summary(data())
     })
 }
 
