@@ -5,18 +5,18 @@ ui <- fluidPage(
     
     sidebarLayout(
         sidebarPanel(
-            sliderInput("num", "Enter a number", min=10, max = 100, value = 50, step = 10)
+            numericInput("x", "Enter value of x: ", value = 1),
+            numericInput("y", "Enter value of y: ", value = 2)
         ),
         mainPanel(
-            plotOutput("hist")
+            textOutput("sum")
         )
     )
 )
 
 server <- function(input, output) {
-    output$hist <- renderPlot({
-        x <- rnorm(input$num)
-        hist(x)
+    output$sum <- renderText({
+        input$x + input$y
     })
 }
 
